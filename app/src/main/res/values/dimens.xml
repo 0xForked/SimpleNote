@@ -1,0 +1,26 @@
+<resources>
+    <dimen name="fab_main_margin">20dp</dimen>
+
+    <!-- Splash Activity -->
+    <dimen name="image_splash_height">100dp</dimen>
+    <dimen name="image_splash_width">100dp</dimen>
+    <dimen name="text_splash_margin">10dp</dimen>
+    <dimen name="text_name_splash_size">30sp</dimen>
+    <dimen name="text_desc_splash_size">20sp</dimen>
+    <dimen name="note_detail_title">10dp</dimen>
+    <dimen name="card_detail_margin">10dp</dimen>
+    <dimen name="layout_ed_padding">15dp</dimen>
+    <dimen name="ed_title_detail_height">30dp</dimen>
+    <dimen name="item_margin_and_padding">10dp</dimen>
+    <dimen name="text_title_size">25sp</dimen>
+    <dimen name="card_margin_bot">50dp</dimen>
+    <dimen name="card_list_height">70dp</dimen>
+    <dimen name="image_button_width">48dp</dimen>
+    <dimen name="image_button_height">48dp</dimen>
+    <dimen name="alert_margin">20dp</dimen>
+
+    <!-- Intro Activity -->
+
+    <!-- Main Activity -->
+
+</resources>

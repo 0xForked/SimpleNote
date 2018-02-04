@@ -1,0 +1,31 @@
+<resources>
+    <!-- About App -->
+    <string name="app_name">EZNote</string>
+    <string name="app_name_caps">EZ NOTE</string>
+    <string name="app_description">Simple, easy, secure.</string>
+
+    <!-- About Dev -->
+
+    <!-- Play Store Link -->
+
+    <string name="search">Search</string>
+
+    <!-- Item description -->
+    <string name="desc_image">Image</string>
+
+    <!-- Main Activity -->
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="done">done</string>
+    <string name="filter">filter</string>
+    <string name="lock">lock</string>
+    <string name="updated">Updated</string>
+    <string name="file">File</string>
+    <string name="voice">Voice</string>
+    <string name="image">Image</string>
+    <string name="falseText">false</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+</resources>
