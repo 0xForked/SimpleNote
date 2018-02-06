@@ -14,9 +14,9 @@ import id.aasumitro.simplenote.data.NotesLocalRepository
 import id.aasumitro.simplenote.data.local.model.Notes
 import id.aasumitro.simplenote.ui.main.MainActivity
 import id.aasumitro.simplenote.ui.main.fragment.detail.FragmentNoteDetail
-import id.aasumitro.simplenote.ui.main.fragment.list.main.recycler.RecyclerMainAdapter
-import id.aasumitro.simplenote.ui.main.fragment.list.main.recycler.RecyclerMainListener
-import id.aasumitro.simplenote.ui.main.fragment.list.main.recycler.RecyclerSwipeDeleteMain
+import id.aasumitro.simplenote.ui.main.fragment.list.main.rvmain.RecyclerMainAdapter
+import id.aasumitro.simplenote.ui.main.fragment.list.main.rvmain.RecyclerMainListener
+import id.aasumitro.simplenote.ui.main.fragment.list.main.rvmain.RecyclerSwipeDeleteMain
 import id.aasumitro.simplenote.ui.main.fragment.list.trash.FragmentTrashList
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -40,25 +40,21 @@ class FragmentNoteList : Fragment(), RecyclerMainListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_note_list, container, false)
-        initList(view)
+        itemsRecyclerView.let { initList(view) }
         return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-
         mainActivity().getToolbar().apply {
             this.title = getString(R.string.app_name)
             this.navigationIcon = null
         }
-
         fab.setOnClickListener {
             mainActivity().replaceFragment(FragmentNoteDetail())
         }
-
         getAllNote()
-
     }
 
     private fun initList(view: View){
@@ -76,12 +72,10 @@ class FragmentNoteList : Fragment(), RecyclerMainListener {
                 super.onScrollStateChanged(recyclerView, newState)
             }
         })
-
         view.swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = false
             getAllNote()
         }
-
     }
 
     private fun getAllNote() {
@@ -93,27 +87,20 @@ class FragmentNoteList : Fragment(), RecyclerMainListener {
     }
 
     private fun handleError(error: Throwable) {
-
         Log.d(TAG, error.localizedMessage)
-        activity!!.toast("Error ${error.localizedMessage}")
-
     }
 
     private fun handleResponse(list: List<Notes>) {
-
         val noteList = ArrayList(list)
         mAdapter = RecyclerMainAdapter(noteList, this@FragmentNoteList)
         itemsRecyclerView.adapter = mAdapter
-
         val swipeHandler = object : RecyclerSwipeDeleteMain(activity!!) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                mAdapter!!.removeAt(viewHolder.adapterPosition)
+                mAdapter!!.removeAt(viewHolder.adapterPosition, view!!)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(itemsRecyclerView)
-
-
     }
 
     override fun onItemClick(notes: Notes) {

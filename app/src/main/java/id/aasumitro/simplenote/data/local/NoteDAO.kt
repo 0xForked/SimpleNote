@@ -32,6 +32,7 @@ interface NoteDAO {
     @Insert
     fun postNotes(notes: Notes)
 
+    //@Query("INSERT OR REPLACE INTO notes (asd, asd, asd) VALUES (:asd, :asd, :asd)")
     @Update
     fun putNotes(notes: Notes)
 

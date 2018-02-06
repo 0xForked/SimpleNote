@@ -1,4 +1,4 @@
-package id.aasumitro.simplenote.ui.main.fragment.list.main.recycler
+package id.aasumitro.simplenote.ui.main.fragment.list.trash.rvtrash
 
 import id.aasumitro.simplenote.data.local.model.NotesTrash
 

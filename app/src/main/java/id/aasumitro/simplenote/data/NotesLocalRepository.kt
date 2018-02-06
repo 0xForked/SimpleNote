@@ -58,6 +58,8 @@ object NotesLocalRepository {
 
     fun clearThisTrash() = notesDao.clearTrash()
 
+    fun deleteItemFromTrashById(id: Long) = notesDao.deleteTrashById(id)
+
     fun restoreFromTrash(id: Long, title: String, description: String,
                          createdAt: Date, updatedAt: Date) {
         postNote(title, description, false, createdAt, updatedAt)

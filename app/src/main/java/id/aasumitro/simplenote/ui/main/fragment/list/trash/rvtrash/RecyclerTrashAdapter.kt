@@ -1,4 +1,4 @@
-package id.aasumitro.simplenote.ui.main.fragment.list.trash.recycler
+package id.aasumitro.simplenote.ui.main.fragment.list.trash.rvtrash
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import id.aasumitro.simplenote.R
 import id.aasumitro.simplenote.data.NotesLocalRepository
 import id.aasumitro.simplenote.data.local.model.NotesTrash
-import id.aasumitro.simplenote.ui.main.fragment.list.main.recycler.RecyclerTrashHolder
-import id.aasumitro.simplenote.ui.main.fragment.list.main.recycler.RecyclerTrashListener
 import java.util.*
 
 
@@ -32,14 +30,25 @@ class RecyclerTrashAdapter(private val noteList: ArrayList<NotesTrash>,
     override fun onBindViewHolder(holder: RecyclerTrashHolder, position: Int) =
             holder.bind(noteList[position], listener)
 
-    fun removeAt(position: Int) {
-        NotesLocalRepository.restoreFromTrash(
-                noteList[position].id!!.toLong(),
-                noteList[position].title.toString(),
-                noteList[position].description.toString(),
-                noteList[position].createdAt!!,
-                Date())
-        noteList.removeAt(position)
-        notifyItemRemoved(position)
+    fun restoreBack(position: Int) {
+        position.let {
+            NotesLocalRepository.restoreFromTrash(
+                    noteList[it].id!!.toLong(),
+                    noteList[it].title.toString(),
+                    noteList[it].description.toString(),
+                    noteList[it].createdAt!!,
+                    Date())
+            noteList.removeAt(it)
+            notifyItemRemoved(it)
+        }
     }
+
+    fun deleteTrashItem(position: Int) {
+        position.let {
+            NotesLocalRepository.deleteItemFromTrashById(noteList[it].id!!.toLong())
+            noteList.removeAt(it)
+            notifyItemRemoved(it)
+        }
+    }
+
 }

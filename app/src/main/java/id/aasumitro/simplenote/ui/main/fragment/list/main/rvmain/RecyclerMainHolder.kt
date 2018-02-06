@@ -1,4 +1,4 @@
-package id.aasumitro.simplenote.ui.main.fragment.list.main.recycler
+package id.aasumitro.simplenote.ui.main.fragment.list.main.rvmain
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

@@ -13,15 +13,18 @@ import id.aasumitro.simplenote.R
 import id.aasumitro.simplenote.data.NotesLocalRepository
 import id.aasumitro.simplenote.data.local.model.NotesTrash
 import id.aasumitro.simplenote.ui.main.MainActivity
-import id.aasumitro.simplenote.ui.main.fragment.list.main.recycler.RecyclerTrashListener
-import id.aasumitro.simplenote.ui.main.fragment.list.trash.recycler.RecyclerSwipeDeleteTrash
-import id.aasumitro.simplenote.ui.main.fragment.list.trash.recycler.RecyclerTrashAdapter
+import id.aasumitro.simplenote.ui.main.fragment.list.trash.rvtrash.RecyclerTrashAdapter
+import id.aasumitro.simplenote.ui.main.fragment.list.trash.rvtrash.RecyclerTrashListener
+import id.aasumitro.simplenote.ui.main.fragment.list.trash.rvtrash.SwipeHelper
+import id.aasumitro.simplenote.ui.main.fragment.list.trash.rvtrash.SwipeHelper.UnderlayButtonClickListener
+import id.aasumitro.simplenote.utils.dsl.action
+import id.aasumitro.simplenote.utils.dsl.snack
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_note_list.*
 import kotlinx.android.synthetic.main.fragment_note_list.view.*
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.alert
+import org.jetbrains.anko.appcompat.v7.Appcompat
 import java.util.*
 
 /**
@@ -38,24 +41,21 @@ class FragmentTrashList : Fragment(), RecyclerTrashListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_note_list, container, false)
-        initList(view)
+        itemsRecyclerView.let { initList(view) }
         view.fab.visibility = View.GONE
         return view
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         mainActivity().getToolbar().apply {
-            this.title = "EZNote trash"
+            this.title = resources.getString(R.string.trash_title)
             this.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             this.setNavigationOnClickListener {
-                activity!!.startActivity<MainActivity>()
-                activity!!.finish()
+                mainActivity().onBackPressed()
             }
         }
-
         getTrashList()
     }
 
@@ -67,13 +67,23 @@ class FragmentTrashList : Fragment(), RecyclerTrashListener {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId) {
-            R.id.menu_clear -> NotesLocalRepository.clearThisTrash()
+            R.id.menu_clear -> {
+                activity!!.alert(Appcompat) {
+                    title = resources.getString(R.string.alert_delete_title)
+                    message = resources.getString(R.string.alert_delete_msg_all)
+                    positiveButton(resources.getString(R.string.delete)) {
+                        NotesLocalRepository.clearThisTrash()
+                        view!!.snack("Deleted success") {
+                            action("OK") { mainActivity().onBackPressed() }
+                        }
+                    }
+                    negativeButton(resources.getString(R.string.cancel)) { }
+                }.show().setCancelable(false)
+            }
         }
         return true
-
     }
-
-
+    
     private fun initList(view: View){
         view.itemsRecyclerView.setHasFixedSize(true)
         val layoutManager : RecyclerView.LayoutManager =
@@ -84,7 +94,6 @@ class FragmentTrashList : Fragment(), RecyclerTrashListener {
             swipeRefreshLayout.isRefreshing = false
             getTrashList()
         }
-
     }
 
     private fun getTrashList() {
@@ -96,31 +105,51 @@ class FragmentTrashList : Fragment(), RecyclerTrashListener {
     }
 
     private fun handleError(error: Throwable) {
-
         Log.d(ContentValues.TAG, error.localizedMessage)
-        activity!!.toast("Error ${error.localizedMessage}")
-
     }
 
     private fun handleResponse(list: List<NotesTrash>) {
-
         val noteList = ArrayList(list)
         mAdapter = RecyclerTrashAdapter(noteList, this@FragmentTrashList)
         itemsRecyclerView.adapter = mAdapter
 
-        val swipeHandler = object : RecyclerSwipeDeleteTrash(activity!!) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                mAdapter!!.removeAt(viewHolder.adapterPosition)
+        @Suppress("DEPRECATION")
+        val swipeHelper = object : SwipeHelper(activity!!, itemsRecyclerView) {
+            override fun instantiateUnderlayButton(viewHolder: RecyclerView.ViewHolder,
+                                                   underlayButtons: MutableList<UnderlayButton>) {
+                underlayButtons.add(SwipeHelper.UnderlayButton(
+                        resources.getString(R.string.delete), resources.getColor(R.color.colorAccent),
+                        UnderlayButtonClickListener {
+                            activity!!.alert(Appcompat) {
+                                title = resources.getString(R.string.alert_delete_title)
+                                message = resources.getString(R.string.alert_delete_msg)
+                                positiveButton(resources.getString(R.string.delete)) {
+                                    mAdapter!!.deleteTrashItem(viewHolder.adapterPosition)
+                                    view!!.snack("Deleted success") {
+                                        action("OK") { mainActivity().onBackPressed() }
+                                    }
+                                }
+                                negativeButton(resources.getString(R.string.cancel)) { }
+                            }.show().setCancelable(false)
+                        }
+                ))
+                underlayButtons.add(SwipeHelper.UnderlayButton(
+                        "Restore", resources.getColor(R.color.colorPrimary),
+                        UnderlayButtonClickListener {
+                            mAdapter!!.restoreBack(viewHolder.adapterPosition)
+                            mainActivity().onBackPressed()
+                        }
+                ))
             }
         }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+
+        val itemTouchHelper = ItemTouchHelper(swipeHelper)
         itemTouchHelper.attachToRecyclerView(itemsRecyclerView)
 
     }
 
-
     override fun onItemClick(notes: NotesTrash) {
-        activity!!.toast("id: ${notes.id} title: ${notes.title} createdAt: ${notes.createdAt} deletedAt: ${notes.deletedAt}")
+        view!!.snack(resources.getString(R.string.detail_available)) { action("") { } }
     }
 
 }

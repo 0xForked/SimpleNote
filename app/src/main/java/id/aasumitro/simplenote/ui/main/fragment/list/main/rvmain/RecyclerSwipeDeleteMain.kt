@@ -1,4 +1,4 @@
-package id.aasumitro.simplenote.ui.main.fragment.list.trash.recycler
+package id.aasumitro.simplenote.ui.main.fragment.list.main.rvmain
 
 import android.content.Context
 import android.graphics.Canvas
@@ -13,10 +13,10 @@ import id.aasumitro.simplenote.R
  * https://asmith.my.id
  * aasumitro@gmail.com
  */
-abstract class RecyclerSwipeDeleteTrash(context: Context) :
+abstract class RecyclerSwipeDeleteMain(context: Context) :
         ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_restore_white_24dp)
+    private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24dp)
     private val intrinsicWidth = deleteIcon!!.intrinsicWidth
     private val intrinsicHeight = deleteIcon!!.intrinsicHeight
     private val background = ColorDrawable()
@@ -24,9 +24,7 @@ abstract class RecyclerSwipeDeleteTrash(context: Context) :
 
     override fun onMove(recyclerView: RecyclerView?,
                         viewHolder: RecyclerView.ViewHolder?,
-                        target: RecyclerView.ViewHolder?): Boolean {
-        return false
-    }
+                        target: RecyclerView.ViewHolder?): Boolean = false
 
     override fun onChildDraw(c: Canvas?, recyclerView: RecyclerView?,
                              viewHolder: RecyclerView.ViewHolder,

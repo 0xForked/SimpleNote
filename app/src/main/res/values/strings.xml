@@ -24,8 +24,12 @@
     <string name="voice">Voice</string>
     <string name="image">Image</string>
     <string name="falseText">false</string>
-    <string name="title_activity_main2">Main2Activity</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="detail_available">Detail for trash items are not available!</string>
+    <string name="trash_title">EZNote trash</string>
+    <string name="delete">Delete</string>
+    <string name="alert_delete_title">Are you sure?</string>
+    <string name="alert_delete_msg">This action will permanently delete these item!</string>
+    <string name="alert_delete_msg_all">This action will permanently delete all item!</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

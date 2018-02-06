@@ -33,7 +33,7 @@
                         android:hint="@string/title"
                         android:imeOptions="actionNext"
                         android:fontFamily="serif"
-                        android:inputType="text" />
+                        android:inputType="textCapSentences" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
